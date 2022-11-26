@@ -1,0 +1,13 @@
+# folder
+node_modules
+dist
+
+# log
+yarn-debug.log*
+yarn-error.log*
+
+# editor
+.vscode/*
+
+# MAC file
+.DS_Store

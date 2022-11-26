@@ -1,0 +1,25 @@
+{
+  "name": "dino-running",
+  "version": "1.0.0",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "scripts": {
+    "start": "tsc && vite",
+    "build": "tsc && vite build"
+  },
+  "devDependencies": {
+    "@sveltejs/vite-plugin-svelte": "^1.3.1",
+    "@types/node": "^18.11.9",
+    "sass": "^1.56.1",
+    "svelte": "^3.53.1",
+    "typescript": "^4.9.3",
+    "vite": "^3.2.4",
+    "vite-tsconfig-paths": "^3.6.0"
+  },
+  "author": "kjwook7522",
+  "license": "MIT",
+  "dependencies": {}
+}
