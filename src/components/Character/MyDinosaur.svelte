@@ -1,5 +1,5 @@
 <script lang="ts">
-  import KeyStore from "@/lib/KeyStore";
+  import KeyStore, { WorkingDirectionKey } from "@/lib/KeyStore";
 
   import MyDinosaurImg1 from "@/assets/images/my-dinosaur1.png";
   import MyDinosaurImg2 from "@/assets/images/my-dinosaur2.png";
@@ -9,9 +9,12 @@
   const POSTRUE_SENSITIVITY = 2;
 
   let postureList = [MyDinosaurImg1, MyDinosaurImg2, MyDinosaurImg3];
-  let currentDirection = 0;
-  let currentPosition = 0;
+  let currentDirectionX = 0;
+  let currentDirectionY = 0;
+  let currentPositionX = 0;
+  let currentPositionY = 0;
   let postureDelta = 0;
+  let isJumping = false;
 
   $: currentPosture = Math.trunc(postureDelta / 20);
 
@@ -19,23 +22,17 @@
   let moveRequestId = 0;
 
   function move() {
-    // Key Code
-    // left   : ArrowLeft
-    // right  : ArrowRight
-    // up     : ArrowUp
-    // down   : ArrowDown
-
-    switch (keyStore.getWorkingKey()) {
-      case "ArrowLeft": {
+    switch (keyStore.workingDirectionKey) {
+      case WorkingDirectionKey.ArrowLeft: {
         postureDelta = (postureDelta + POSTRUE_SENSITIVITY) % 60;
-        currentDirection = 1;
-        currentPosition -= MOVE_SENSITIVITY;
+        currentDirectionX = 1;
+        currentPositionX -= MOVE_SENSITIVITY;
         break;
       }
-      case "ArrowRight": {
+      case WorkingDirectionKey.ArrowRight: {
         postureDelta = (postureDelta + POSTRUE_SENSITIVITY) % 60;
-        currentDirection = 0;
-        currentPosition += MOVE_SENSITIVITY;
+        currentDirectionX = 0;
+        currentPositionX += MOVE_SENSITIVITY;
         break;
       }
       default: {
@@ -43,25 +40,49 @@
       }
     }
 
+    if (keyStore.store["Space"]) {
+      isJumping = true;
+    }
+
+    if (isJumping) {
+      jump();
+    }
+
     moveRequestId = requestAnimationFrame(move);
+    if (keyStore.isEmpty() && !isJumping) {
+      cancelAnimationFrame(moveRequestId);
+    }
+  }
+
+  function jump() {
+    if (currentDirectionY) {
+      currentPositionY -= MOVE_SENSITIVITY;
+    } else {
+      currentPositionY += MOVE_SENSITIVITY;
+    }
+
+    if (currentPositionY > 100) {
+      currentDirectionY = 1;
+    }
+
+    if (currentPositionY < 0) {
+      currentDirectionY = 0;
+      isJumping = false;
+    }
   }
 
   function handleKeyDownEvent(event: KeyboardEvent) {
-    if (keyStore.isEmpty()) {
+    if (keyStore.isEmpty() && !isJumping) {
       moveRequestId = requestAnimationFrame(move);
     }
 
-    keyStore.press(event.key);
+    keyStore.press(event.code);
     keyStore = keyStore;
   }
 
   function handleKeyUpEvent(event: KeyboardEvent) {
-    keyStore.unpress(event.key);
+    keyStore.unpress(event.code);
     keyStore = keyStore;
-
-    if (keyStore.isEmpty()) {
-      cancelAnimationFrame(moveRequestId);
-    }
   }
 </script>
 
@@ -70,7 +91,9 @@
 <img
   src={postureList[currentPosture]}
   class="dinosaur"
-  style="transform: translateX({currentPosition}px) rotateY({currentDirection ? '180deg' : '0'})"
+  style="transform: translateX({currentPositionX}px) translateY({-currentPositionY}px) rotateY({currentDirectionX
+    ? '180deg'
+    : '0'})"
   draggable="false"
   alt="my-dinosaur"
 />
