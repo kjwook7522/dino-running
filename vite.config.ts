@@ -3,6 +3,7 @@ import { svelte } from "@sveltejs/vite-plugin-svelte";
 import sveltePreprocess from "svelte-preprocess";
 import path from "path";
 import type { ServerOptions, PluginOption } from "vite";
+console.log(process.env);
 
 const isProduction = process.env.NODE_ENV === "production";
 
