@@ -33,14 +33,13 @@ jobs:
       - name: Build
         run: npm run build
       
-      - name: Repository checkout
-        uses: actions/checkout@v3
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
         with:
-          ref: deploy
-
-      - name: Create new commit of build
-        uses: stefanzweifel/git-auto-commit-action@v4
-        with:
-          commit_message: "[deploy] github action build"
-          commit_user_name: gihub-action-bot
-          commit_user_email: kjwook7522@gamil.com
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: deploy
+          publish_dir: ./dist
+          commit_message: '[deploy] github action deploy'
+          user_name: 'github-actions[bot]'
+          user_email: 'kjwook7522@gmail.com'
+          keep_files: true
