@@ -4,6 +4,10 @@ import sveltePreprocess from "svelte-preprocess";
 import path from "path";
 import type { ServerOptions, PluginOption } from "vite";
 
+const isProduction = process.env.NODE_ENV === "production";
+
+const base = isProduction ? "/dino-running/" : "";
+
 const server: ServerOptions = {
   host: "localhost",
   port: 8080,
@@ -16,8 +20,9 @@ const plugins: PluginOption = [
 ];
 
 export default defineConfig({
-  plugins,
+  base,
   server,
+  plugins,
   css: {
     modules: {
       generateScopedName: "[local]___[hash:base64:4]",
