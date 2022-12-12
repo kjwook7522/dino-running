@@ -1,0 +1,52 @@
+name: main branch deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Repository checkout
+        uses: actions/checkout@v3
+
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        id: npm-cache
+        with:
+          path: ${{ steps.npm-cache-dir.outputs.dir }}
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Build
+        run: npm build
+
+  deploy:
+    needs: build
+
+    permissions:
+      pages: write
+      id-token: write
+    
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Create new commit of build
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: [deploy] github action build
+          commit_user_name: gihub-action-bot
+          commit_user_email: kjwook7522@gamil.com
+          branch: deploy
+          file_pattern: 'dist/*'
