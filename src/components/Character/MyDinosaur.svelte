@@ -7,21 +7,37 @@
 
   const MOVE_SENSITIVITY = 3;
   const POSTRUE_SENSITIVITY = 2;
+  const IDLE_POSTURE = 0;
+  const JUMP_POSTURE = 1;
 
   let postureList = [MyDinosaurImg1, MyDinosaurImg2, MyDinosaurImg3];
   let currentDirectionX = 0;
   let currentDirectionY = 0;
   let currentPositionX = 0;
   let currentPositionY = 0;
+  let currentPosture = 0;
   let postureDelta = 0;
+
+  let isMoving = false;
   let isJumping = false;
 
-  $: currentPosture = Math.trunc(postureDelta / 20);
+  $: {
+    currentPosture = Math.trunc(postureDelta / 20);
+
+    if (!isMoving) {
+      currentPosture = IDLE_POSTURE;
+    }
+
+    if (isJumping) {
+      currentPosture = JUMP_POSTURE;
+    }
+  }
 
   let keyStore = new KeyStore();
   let moveRequestId = 0;
+  let jumpRequestId = 0;
 
-  function move() {
+  function handleMove() {
     switch (keyStore.workingDirectionKey) {
       case WorkingDirectionKey.ArrowLeft: {
         postureDelta = (postureDelta + POSTRUE_SENSITIVITY) % 60;
@@ -40,21 +56,14 @@
       }
     }
 
-    if (keyStore.store["Space"]) {
-      isJumping = true;
-    }
-
-    if (isJumping) {
-      jump();
-    }
-
-    moveRequestId = requestAnimationFrame(move);
-    if (keyStore.isEmpty() && !isJumping) {
+    moveRequestId = requestAnimationFrame(handleMove);
+    if (!keyStore.store["ArrowLeft"] && !keyStore.store["ArrowRight"]) {
       cancelAnimationFrame(moveRequestId);
+      isMoving = false;
     }
   }
 
-  function jump() {
+  function handleJump() {
     if (currentDirectionY) {
       currentPositionY -= MOVE_SENSITIVITY;
     } else {
@@ -65,15 +74,23 @@
       currentDirectionY = 1;
     }
 
+    jumpRequestId = requestAnimationFrame(handleJump);
     if (currentPositionY < 0) {
+      cancelAnimationFrame(jumpRequestId);
       currentDirectionY = 0;
       isJumping = false;
     }
   }
 
   function handleKeyDownEvent(event: KeyboardEvent) {
-    if (keyStore.isEmpty() && !isJumping) {
-      moveRequestId = requestAnimationFrame(move);
+    if ((event.code === "ArrowLeft" || event.code === "ArrowRight") && !isMoving) {
+      moveRequestId = requestAnimationFrame(handleMove);
+      isMoving = true;
+    }
+
+    if (event.code === "Space" && !isJumping) {
+      jumpRequestId = requestAnimationFrame(handleJump);
+      isJumping = true;
     }
 
     keyStore.press(event.code);
