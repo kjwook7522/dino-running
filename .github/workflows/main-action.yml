@@ -32,6 +32,11 @@ jobs:
 
       - name: Build
         run: npm run build
+      
+      - name: Repository checkout
+        uses: actions/checkout@v3
+        with:
+          ref: deploy
 
       - name: Create new commit of build
         uses: stefanzweifel/git-auto-commit-action@v4
