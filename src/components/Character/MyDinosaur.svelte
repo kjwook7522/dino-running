@@ -108,17 +108,18 @@
 <img
   src={postureList[currentPosture]}
   class="dinosaur"
-  style="transform: translateX({currentPositionX}px) translateY({-currentPositionY}px) rotateY({currentDirectionX
-    ? '180deg'
-    : '0'})"
+  style="
+    --positionX:{`${currentPositionX}px`};
+    --positionY:{`${-currentPositionY}px`};
+    --direction:{currentDirectionX ? '180deg' : '0'}"
   draggable="false"
   alt="my-dinosaur"
 />
-<div />
 
 <style lang="scss">
   .dinosaur {
     position: relative;
     width: 55px;
+    transform: translateX(var(--positionX)) translateY(var(--positionY)) rotateY(var(--direction));
   }
 </style>
