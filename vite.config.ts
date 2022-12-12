@@ -18,7 +18,6 @@ const plugins: PluginOption = [
 export default defineConfig({
   plugins,
   server,
-  root: path.join(__dirname, "src"),
   css: {
     modules: {
       generateScopedName: "[local]___[hash:base64:4]",
