@@ -24,6 +24,6 @@ export default defineConfig({
       generateScopedName: "[local]___[hash:base64:4]",
     },
   },
-  resolve: { alias: { "@": "./" } },
+  resolve: { alias: { "@": path.join(__dirname, "src") } },
   clearScreen: true,
 });
