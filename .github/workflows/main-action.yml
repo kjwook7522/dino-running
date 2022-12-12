@@ -44,5 +44,3 @@ jobs:
           commit_message: "[deploy] github action build"
           commit_user_name: gihub-action-bot
           commit_user_email: kjwook7522@gamil.com
-          branch: deploy
-          file_pattern: "dist/*"
