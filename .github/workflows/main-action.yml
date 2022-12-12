@@ -6,13 +6,13 @@ on:
       - main
 
 jobs:
-  build:
+  build & deploy:
     runs-on: ubuntu-latest
 
     steps:
       - name: Repository checkout
         uses: actions/checkout@v3
-      
+
       - name: Get npm cache directory
         id: npm-cache-dir
         shell: bash
@@ -33,20 +33,6 @@ jobs:
       - name: Build
         run: npm run build
 
-  deploy:
-    needs: build
-
-    permissions:
-      pages: write
-      id-token: write
-    
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-
-    runs-on: ubuntu-latest
-
-    steps:
       - name: Create new commit of build
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
@@ -54,4 +40,4 @@ jobs:
           commit_user_name: gihub-action-bot
           commit_user_email: kjwook7522@gamil.com
           branch: deploy
-          file_pattern: 'dist/*'
+          file_pattern: "dist/*"
