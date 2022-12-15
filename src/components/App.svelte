@@ -1,7 +1,9 @@
 <script lang="ts">
   import MyDinosaur from "@/components/Character/MyDinosaur.svelte";
+  import FindspotBackground from "@/components/Background/FindspotBackground.svelte";
 </script>
 
+<FindspotBackground />
 <div class="dinosaur-road">
   <MyDinosaur />
 </div>
@@ -25,6 +27,8 @@
   }
 
   .dinosaur-road {
+    position: relative;
+    top: -4rem;
     width: 100%;
   }
 </style>
