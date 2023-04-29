@@ -6,7 +6,7 @@
   import MyDinosaurImg3 from "@/assets/images/my-dinosaur3.png";
 
   const MOVE_SENSITIVITY = 3;
-  const POSTRUE_SENSITIVITY = 2;
+  const POSTURE_SENSITIVITY = 2;
   const IDLE_POSTURE = 0;
   const JUMP_POSTURE = 1;
 
@@ -40,13 +40,13 @@
   function handleMove() {
     switch (keyStore.workingDirectionKey) {
       case WorkingDirectionKey.ArrowLeft: {
-        postureDelta = (postureDelta + POSTRUE_SENSITIVITY) % 60;
+        postureDelta = (postureDelta + POSTURE_SENSITIVITY) % 60;
         currentDirectionX = 1;
         currentPositionX -= MOVE_SENSITIVITY;
         break;
       }
       case WorkingDirectionKey.ArrowRight: {
-        postureDelta = (postureDelta + POSTRUE_SENSITIVITY) % 60;
+        postureDelta = (postureDelta + POSTURE_SENSITIVITY) % 60;
         currentDirectionX = 0;
         currentPositionX += MOVE_SENSITIVITY;
         break;
